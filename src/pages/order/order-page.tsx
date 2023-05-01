@@ -48,8 +48,9 @@ export function OrderPage() {
     }
 
     return (
-        <div>
+        <div className={"container"}>
             <h2>Order Details</h2>
+            <div className={"details"}>
             {order ? (
                 <>
                     <p>User: {order.user.username}</p>
@@ -69,6 +70,7 @@ export function OrderPage() {
             ) : (
                 <p>Loading...</p>
             )}
+            </div>
         </div>
     );
 }

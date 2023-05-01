@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
-import {Device} from "../device/device-traffic";
+import "./user-orders.css";
 
 interface Order {
     id: number;
@@ -31,22 +31,26 @@ export function UserOrders() {
     }, [username])
 
     return (
-        <div className={'w-[300px] border-2 mt-4 ml-4 rounded-md box-border p-[10px] flex flex-col'}>
+        <div>
             <p>Количество заказов: {orders.length}</p>
+            <div className={"center"}>
             <table className={'border-2 mt-4'}>
                 <thead>
                 <th className={'border-2'}>ID</th>
-                <th className={'border-2'}>Цена</th>
+                <th className={'border-2'}>SumPrice</th>
+                <th className={'border-2'}>Details</th>
                 </thead>
                 <tbody>
                 {orders.map((order: Order) => (
-                    <tr key={order.id} onClick={() => redirect(`/users/${username}/orders/${order.id}`)}>
+                    <tr>
                         <td>{order.id} </td>
-                        <td>{order.sumPrice} </td>
+                        <td>{order.sumPrice} ₽</td>
+                        <td key={order.id} onClick={() => redirect(`/users/${username}/orders/${order.id}`)}>View details...</td>
                     </tr>
                 ))}
                 </tbody>
             </table>
+            </div>
         </div>
     );
 }
