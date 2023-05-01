@@ -1,7 +1,7 @@
 import * as React from 'react'
 import axios, {AxiosError} from "axios";
 import {useNavigate} from "react-router-dom";
-import {Device} from "./admin-device-traffic";
+import {Device} from "./device-traffic";
 
 export function CreateDevice(){
     const [devices, setDevices] = React.useState<Device>({

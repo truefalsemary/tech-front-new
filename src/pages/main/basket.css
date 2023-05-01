@@ -26,7 +26,7 @@
     font-size: 30px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: right;
     align-items: flex-end;
     padding: 0 20px;
     overflow-wrap: break-word;
@@ -52,7 +52,7 @@
     height: 30px;
     border-radius: 50%;
     background-color: #e6e6e6;
-    border: none;
+    border: 1px solid darkgray;
     cursor: pointer;
     margin: 0 5px;
     font-size: 20px;
@@ -76,6 +76,7 @@
 .checkout button {
     width: 150px;
     height: 50px;
+    font-size:16px;
     background-color: rgb(19, 19, 19);
     color: white;
     border: none;
@@ -87,9 +88,14 @@
     align-items: center;
 }
 
+.checkout button:hover{
+    background-color:rgb(94, 94, 94);
+    transform: scale(1.03);
+}
+
 .buttons {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
-    width: 300px;
+    width: 340px;
 }

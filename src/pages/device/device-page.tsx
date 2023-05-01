@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {redirect, useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
-import {Device} from "./admin-device-traffic";
+import {Device} from "./device-traffic";
 import {AxiosError} from "axios/index";
 
 export function DevicePage(){
@@ -26,7 +26,7 @@ export function DevicePage(){
             headers: {"Content-Type": "multipart/form-data", Authorization: `Bearer ${localStorage.getItem('token')}`},
         })
         res.then((res) =>{
-            setDevices({...res.data, registered: time(res.data.registered)})
+            setDevices({...res.data})
         }).catch((e) => redirect('/auth'))
     }, [id])
 
@@ -37,7 +37,7 @@ export function DevicePage(){
     const deleteDevice = () => {
         axios({
             method: 'post',
-            url: `http://localhost:8080/device/${devices.id}`,
+            url: `http://localhost:8080/api/devices/${devices.id}`,
             headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${localStorage.getItem('token')}` },
         }).then(() =>
             redirect('/device-traffic')
@@ -52,7 +52,7 @@ export function DevicePage(){
     const saveCargo = () => {
         const res = axios({
             method: 'post',
-            url: `http://localhost:8080/device`,
+            url: `http://localhost:8080/api/devices/${id}`,
             data: devices,
             headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${localStorage.getItem('token')}` },
         })
@@ -76,8 +76,10 @@ export function DevicePage(){
     <label>Цена:</label>
     <input type={"number"} className={'border-2 rounded-md'} value={devices.price} onChange={(e) => setDevices({...devices, price: Number(e.target.value)})}/><br/>
     <label>Описание:</label>
-    <input  className={'border-2 rounded-md'} value={devices.description} onChange={(e) => setDevices({...devices, description: e.target.value})}/><br/>
-    <label>Тип</label>
+                <textarea className={'border-2 rounded-md'} value={devices.description} onChange={(e) => setDevices({...devices, description: e.target.value})}></textarea>
+    {/*<input type={} className={'border-2 rounded-md'} value={devices.description} onChange={(e) => setDevices({...devices, description: e.target.value})}/><br/>*/}
+    <br/>
+                <label>Тип</label>
     <input  className={'border-2 rounded-md'} value={devices.type} onChange={(e) => setDevices({...devices, type: e.target.value})}/><br/>
     <label>Бренд</label>
     <input  className={'border-2 rounded-md'} value={devices.brand} onChange={(e) => setDevices({...devices, brand: e.target.value})}/><br/>
@@ -94,7 +96,7 @@ export function DevicePage(){
     {
         ((localStorage.getItem('decoded')?.includes('MANAGER')) == false) &&
         <div className={'mt-4 ml-4 rounded-md box-border p-[10px] flex flex-col'}>
-        <button onClick={(e) => redirect('/device-traffic')}>Вернуться</button>
+        <button onClick={(e) => redirect('/shop')}>Вернуться</button>
     </div>
     }
     </div>

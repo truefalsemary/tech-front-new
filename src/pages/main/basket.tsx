@@ -12,37 +12,61 @@ export interface Device {
     filename: string;
 }
 
+export interface ItemQuantity {
+    deviceId: number;
+    quantity: number;
+}
+
 export function Basket() {
     const {username} = useParams()
     const [devices, setDevices] = useState<Device[]>([]);
+    const [itemQuantities, setItemQuantities] = useState<ItemQuantity[]>([]);
 
     React.useEffect(() => {
         const promise = axios({
             method: 'get',
             url: `http://localhost:8080/api/users/${username}/devices`,
-            headers: {"Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}`}
-        })
-        promise.then((res) => {
-            setDevices(res.data)
-        }).catch((e) => redirect('/auth'))
-    }, [])
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+        });
+        promise
+            .then((res) => {
+                const items: ItemQuantity[]  = res.data.map((device: Device) => ({
+                    deviceId: device.id,
+                    quantity: 1
+                }));
+                setItemQuantities(items);
+                setDevices(res.data);
 
-    const addToCart = (username: String, device: Device) => {
-        const res = axios({
+            })
+            .catch((e: any) => {
+                alert(e);
+                // (window.location.href = '/auth');
+            });
+    }, [username]);
+
+    const checkout = () => {
+        axios({
             method: 'post',
-            url: `http://localhost:8080/api/users/${username}/devices`,
-            data: device,
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
+            url: `http://localhost:8080/api/orders/${username}`,
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+            data: itemQuantities
         })
-        res.then((res) => {
-            redirect(`/users/${username}/basket`)
-        }).catch((reason: AxiosError) => {
-            if (reason.response!.status === 401) {
-                redirect('/auth')
-            } else if (reason.response!.status === 403) {
+            .then(() => {
+                setItemQuantities([]);
+                setDevices([]);
                 redirect('/shop')
-            }})
-    }
+            })
+            .catch(() => {
+                redirect(`/users/${username}/basket`)
+            });
+    };
+
 
     const deleteDeviceFromUser = (deviceId: number) => {
         setDevices(devices.filter(i => i.id !== deviceId));
@@ -60,14 +84,33 @@ export function Basket() {
             }})
     }
 
+    const updateItemQuantity = (deviceId: number, quantity: number) => {
+        const updatedQuantity = Math.max(quantity, 1); // Ensure quantity is not less than 1
+        const updatedItemQuantity = itemQuantities.map(item => {
+            if (item.deviceId === deviceId) {
+                return { ...item, quantity: updatedQuantity };
+            }
+            return item;
+        });
+        setItemQuantities(updatedItemQuantity);
+    };
+
+
     return (
         <div className="cart">
             <div>
                 <h1>Your Cart Items</h1>
             </div>
             <div className="cart">
+                {itemQuantities.map((item: ItemQuantity) =>
+                    <div key={item.deviceId}>
+                        <b>{item.deviceId}</b>: {item.quantity}
+                        <br/>
+                    </div>
+                )}
+
                 {devices.map((device: Device) =>
-                    <div className="cartItem" onClick={() => redirect(`/device/${device.id}`)}>
+                    <div key={device.id} className="cartItem" onClick={() => redirect(`/device/${device.id}`)}>
                         {/*<DeviceImage id={device.id} title={device.title} filename={device.filename}/>*/}
                         <img src={require(`../../assets/devices/${device.filename}`)} alt={device.filename} />
 
@@ -77,13 +120,28 @@ export function Basket() {
                             </p>
                             <p>{device.price}₽</p>
                         </div>
+                        <div className="countHandler">
+                            <button onClick={() => updateItemQuantity(device.id, (itemQuantities.find(item => item.deviceId === device.id)?.quantity || 0) - 1)}> - </button>
+                            {/*<b>{itemQuantities[device.id]?.deviceId || 0}</b>*/}
+                            <b>{itemQuantities.find(item => item.deviceId === device.id)?.quantity || 0}</b>
+                            <button onClick={() => updateItemQuantity(device.id, (itemQuantities.find(item => item.deviceId === device.id)?.quantity || 0) + 1)}> + </button>
+                        </div>
+
+
                         {username!==undefined && <button className="addToCartBttn" onClick={() => deleteDeviceFromUser(device.id)}>
                             Delete From Basket
                         </button>}
 
+
                     </div>
 
                 )}
+                </div>
+            <div className="buttons">
+                <button onClick={() => redirect('/shop')}>Continue Shopping</button>
+                <button onClick={() => checkout()}>
+                    Checkout
+                </button>
             </div>
 
             {/*{devices.length > 0 ? (*/}
