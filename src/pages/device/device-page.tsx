@@ -1,12 +1,23 @@
-import * as React from 'react'
-import {redirect, useNavigate, useParams} from "react-router-dom";
+import * as React from 'react';
+import {useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
-import {Device} from "./device-traffic";
 import {AxiosError} from "axios";
+import jwtDecode from "jwt-decode";
+import "./device-page.css"
+
+export interface Device {
+    id: number;
+    title: string;
+    price: number;
+    description: string;
+    type: string;
+    brand: string;
+    filename: string;
+}
 
 export function DevicePage(){
     const {id} = useParams()
-    const [devices, setDevices] = React.useState<Device>({
+    const [device, setDevice] = React.useState<Device>({
         id: 0,
         title: '',
         price: 0,
@@ -15,9 +26,15 @@ export function DevicePage(){
         brand: '',
         filename: ''
     })
-
-
     const redirect = useNavigate();
+    const imageUrl:string = "../../assets/devices/"+device.filename;
+    const token: string | null = localStorage.getItem('token');
+    let decodedUsername: string = "";
+
+    if (token !== null) {
+        decodedUsername = (jwtDecode(token) as { username: string }).username;
+    }
+
 
     React.useEffect(() =>{
         const res = axios({
@@ -26,18 +43,15 @@ export function DevicePage(){
             headers: {"Content-Type": "multipart/form-data", Authorization: `Bearer ${localStorage.getItem('token')}`},
         })
         res.then((res) =>{
-            setDevices({...res.data})
-        }).catch((e) => redirect('/auth'))
+            setDevice({...res.data})
+        }).catch(() => redirect('/auth'))
     }, [id])
 
-    const time = (value: string) => {
-        return value?.slice(0, 10)
-    }
 
     const deleteDevice = () => {
         axios({
             method: 'post',
-            url: `http://localhost:8080/api/devices/${devices.id}`,
+            url: `http://localhost:8080/api/devices/${device.id}`,
             headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${localStorage.getItem('token')}` },
         }).then(() =>
             redirect('/device-traffic')
@@ -53,7 +67,7 @@ export function DevicePage(){
         const res = axios({
             method: 'post',
             url: `http://localhost:8080/api/devices/${id}`,
-            data: devices,
+            data: device,
             headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${localStorage.getItem('token')}` },
         })
         res.then((res) => {
@@ -65,43 +79,42 @@ export function DevicePage(){
                 redirect('/device-traffic')
             }})
     }
-
-    // @ts-ignore
-    return(
-        <div>
-            {devices && (
-            <div className={'w-[300px] border-2 mt-4 ml-4 rounded-md box-border p-[10px] flex flex-col'}>
-                <label>Название:</label>
-    <input  className={'border-2 rounded-md'} value={devices.title} onChange={(e) => setDevices({...devices, title: e.target.value})}/><br/>
-    <label>Цена:</label>
-    <input type={"number"} className={'border-2 rounded-md'} value={devices.price} onChange={(e) => setDevices({...devices, price: Number(e.target.value)})}/><br/>
-    <label>Описание:</label>
-                <textarea className={'border-2 rounded-md'} value={devices.description} onChange={(e) => setDevices({...devices, description: e.target.value})}></textarea>
-    {/*<input type={} className={'border-2 rounded-md'} value={devices.description} onChange={(e) => setDevices({...devices, description: e.target.value})}/><br/>*/}
-    <br/>
-                <label>Тип</label>
-    <input  className={'border-2 rounded-md'} value={devices.type} onChange={(e) => setDevices({...devices, type: e.target.value})}/><br/>
-    <label>Бренд</label>
-    <input  className={'border-2 rounded-md'} value={devices.brand} onChange={(e) => setDevices({...devices, brand: e.target.value})}/><br/>
-    <label>Url файла:</label>
-    <input className={'border-2 rounded-md'} value={devices.filename} onChange={(e) => setDevices({...devices, filename: e.target.value})}/><br/>
-    {
-    ((localStorage.getItem('decoded')?.includes('MANAGER'))) &&
-    <div className={'mt-4 ml-4 rounded-md box-border p-[10px] flex flex-col'}>
-    <button onClick={saveCargo}>Сохранить</button>
-        <button onClick={deleteDevice}>Удалить</button>
-        </div>
-}
-
-    {
-        ((localStorage.getItem('decoded')?.includes('MANAGER')) == false) &&
-        <div className={'mt-4 ml-4 rounded-md box-border p-[10px] flex flex-col'}>
-        <button onClick={(e) => redirect('/shop')}>Вернуться</button>
-    </div>
+    const addToCart = (username: String, device: Device) => {
+        const res = axios({
+            method: 'post',
+            url: `http://localhost:8080/api/users/${username}/devices`,
+            data: device,
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
+        })
+        res.then((res) => {
+            redirect(`/users/${decodedUsername}/basket`)
+        }).catch((reason: AxiosError) => {
+            if (reason.response!.status === 401) {
+                redirect('/auth')
+            } else if (reason.response!.status === 403) {
+                redirect('/shop')
+            }})
     }
-    </div>
-)}
-    </div>
+
+    return(
+        <div className={"product-container"}>
+            <div className={"product-image-container"} key={device.id}>
+                <p>{device.filename}</p>
+                {/*<img className={"product-image"} src={require(imageUrl)} alt={device.filename} />*/}
+            </div>
+            <div>
+                <h1 className="product-name">{device.title}</h1>
+                <div className="product-details">
+                    <p><b>ID:</b> {id}</p>
+                    <p><b>Price:</b> ${device.price}</p>
+                    <p><b>Description:</b></p>
+                    <p>{device.description}</p>
+                    <button className="addToCartBttn" onClick={() => addToCart(decodedUsername, device)}>
+                        Add To Basket
+                    </button>
+                </div>
+            </div>
+        </div>
 )
 
 }

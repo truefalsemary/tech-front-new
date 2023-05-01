@@ -3,7 +3,7 @@ import * as React from 'react'
 import { useInput } from "./useInput";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
-
+import "./auth.css";
 
 export function SignIn({changeStage}: {changeStage: React.Dispatch<React.SetStateAction<boolean>>}){
 
@@ -28,14 +28,18 @@ export function SignIn({changeStage}: {changeStage: React.Dispatch<React.SetStat
 
 
     return(
-        <div className={'w-[300px] h-[400px] border-2 flex flex-col rounded-md box-border p-[10px] m-auto mt-4'}>
+        <div>
+            <br/>
             <p className={'text-[24px] text-center'}>Авторизация</p>
             <label>Логин</label>
-            <input className={'w-full h-[40px] mt-2 rounded-md border-2'} {...username} />
+            <input  {...username} />
+            <br/>
             <label>Пароль</label>
-            <input className={'w-full h-[40px] mt-2 rounded-md border-2'} {...password} />
-            <button className={'mt-4'} onClick={signIn}>Войти</button>
-            <button className={'mt-2'} onClick={() => changeStage(false)}>Зарегистрироваться</button>
+            <input type="password" {...password} />
+            <br/>
+            <button onClick={signIn}>Войти</button>
+            <br/>
+            <button onClick={() => changeStage(false)}>Зарегистрироваться</button>
         </div>
     )
 }

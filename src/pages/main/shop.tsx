@@ -17,6 +17,8 @@ export interface Device {
 export function Shop(){
     const redirect = useNavigate()
     const [devices, setDevices] = useState<Device[]>([]);
+    const [initialDevices, setInitialDevices] = React.useState<Array<Device>>([])
+    const [search, setSearch] = React.useState('')
 
     const token: string | null = localStorage.getItem('token');
     let decodedUsername: string = "";
@@ -34,6 +36,7 @@ export function Shop(){
         })
         promise.then((res) => {
             setDevices(res.data)
+            setInitialDevices(res.data)
         }).catch((e) => redirect('/auth'))
     }, [])
 
@@ -55,11 +58,29 @@ export function Shop(){
             }})
     }
 
+    const searchDevices = () => {
+        setDevices([...initialDevices.filter((a: Device) => {
+            return a.title.toLowerCase()?.includes(search) || String(a.price).toLowerCase()===search
+                || a.description.toLowerCase()?.includes(search) || a.type.toLowerCase()?.includes(search)
+                || a.brand.toLowerCase()?.includes(search)
+        })])
+    }
+
     return (
         <div className="shop">
             <div className="shopTitle">
                 <h1>TechTonic</h1>
             </div>
+
+            <input value={search.toLowerCase()} onChange={(e) => setSearch(e.target.value)}
+                   className={'border-2 w-[150px] h-[30px] ml-4 rounded-md'}/>
+
+            <button className={"addToCartBttn"}
+                    onClick={searchDevices}>Поиск
+            </button>
+            <button className={"addToCartBttn"}
+                    onClick={() => setDevices(initialDevices)}>X
+            </button>
 
             <div className="products">
                 {devices.map((device: Device) =>

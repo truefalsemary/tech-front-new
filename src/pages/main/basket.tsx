@@ -110,7 +110,7 @@ export function Basket() {
                 )}
 
                 {devices.map((device: Device) =>
-                    <div key={device.id} className="cartItem" onClick={() => redirect(`/device/${device.id}`)}>
+                    <div key={device.id} className="cartItem">
                         {/*<DeviceImage id={device.id} title={device.title} filename={device.filename}/>*/}
                         <img src={require(`../../assets/devices/${device.filename}`)} alt={device.filename} />
 
@@ -122,7 +122,6 @@ export function Basket() {
                         </div>
                         <div className="countHandler">
                             <button onClick={() => updateItemQuantity(device.id, (itemQuantities.find(item => item.deviceId === device.id)?.quantity || 0) - 1)}> - </button>
-                            {/*<b>{itemQuantities[device.id]?.deviceId || 0}</b>*/}
                             <b>{itemQuantities.find(item => item.deviceId === device.id)?.quantity || 0}</b>
                             <button onClick={() => updateItemQuantity(device.id, (itemQuantities.find(item => item.deviceId === device.id)?.quantity || 0) + 1)}> + </button>
                         </div>
@@ -138,8 +137,9 @@ export function Basket() {
                 )}
                 </div>
             <div className="buttons">
-                <button onClick={() => redirect('/shop')}>Continue Shopping</button>
-                <button onClick={() => checkout()}>
+
+                <button className={"special-buttons"} onClick={() => redirect('/shop')}>Continue Shopping</button>
+                <button className={"special-buttons"} onClick={() => checkout()} disabled={devices.length === 0}>
                     Checkout
                 </button>
             </div>

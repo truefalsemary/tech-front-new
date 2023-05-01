@@ -1,6 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { ShoppingCart } from "phosphor-react";
+import {Link} from "react-router-dom";
+import {ShoppingCart} from "phosphor-react";
 import "./navbar.css";
 import jwtDecode from "jwt-decode";
 
@@ -19,8 +19,16 @@ export const Navbar = () => {
             <div className="links">
                 <Link to="/shop"> Shop </Link>
                 <Link to="/about"> About </Link>
+                {token !== null && <Link to={`/users/${decodedUsername}/orders`}> Orders </Link>}
+
+                {
+                    token !== null ?
+                        <Link to={"/auth"}>Logout</Link> :
+                        <Link to={"/auth"}>Login</Link>
+
+                }
                 <Link to={`/users/${decodedUsername}/basket`}>
-                    <ShoppingCart size={32} />
+                    <ShoppingCart size={32}/>
                 </Link>
                 {/*{*/}
                 {/*    token!==null ?*/}

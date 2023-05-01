@@ -3,7 +3,7 @@ import * as React from 'react'
 import { useInput } from "./useInput";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
-
+import "./auth.css"
 export function SignUp({changeStage}: {changeStage: React.Dispatch<React.SetStateAction<boolean>>}){
 
     const username = useInput()
@@ -27,15 +27,21 @@ export function SignUp({changeStage}: {changeStage: React.Dispatch<React.SetStat
     }
 
     return(
-        <div className={'w-[300px] h-[400px] border-2 flex flex-col rounded-md box-border p-[10px] m-auto mt-4'}>
-            <p className={'text-[24px] text-center'}>Регистрация</p>
+        <div className={"reg"}>
+            <br/>
+            <p >Регистрация</p>
+            <br/>
             <label>Логин</label>
             <input className={'w-full h-[40px] mt-2 rounded-md border-2'} {...username} />
+            <br/>
             <label>Пароль</label>
-            <input className={'w-full h-[40px] mt-2 rounded-md border-2'} {...password} />
-            <label>Повторите пароль</label>
-            <input className={'w-full h-[40px] mt-2 rounded-md border-2'} {...passwordConfirm} />
+            <input type="password" {...password} />
+            <br/>
+            <label>Повторите<br/> пароль</label>
+            <input type="password" {...passwordConfirm} />
+            <br/>
             <button className={'mt-4'} onClick={signUp}>Зарегистрироваться</button>
+            <br/>
             <button className={'mt-2'} onClick={() => changeStage(true)}>Авторизация</button>
         </div>
     )
