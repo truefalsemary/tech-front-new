@@ -2,7 +2,7 @@ import * as React from 'react'
 import {redirect, useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import {Device} from "./device-traffic";
-import {AxiosError} from "axios/index";
+import {AxiosError} from "axios";
 
 export function DevicePage(){
     const {id} = useParams()

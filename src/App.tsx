@@ -11,7 +11,7 @@ import {DevicePage} from "./pages/device/device-page";
 import {Navbar} from "./components/Navbar";
 import {About} from "./pages/main/about";
 import {OrderPage} from "./pages/order/order-page";
-import UserOrders from "./pages/order/user-orders";
+import {UserOrders} from "./pages/order/user-orders";
 
 
 function App() {
