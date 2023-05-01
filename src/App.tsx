@@ -11,6 +11,7 @@ import {DevicePage} from "./pages/device/device-page";
 import {Navbar} from "./components/Navbar";
 import {About} from "./pages/main/about";
 import {OrderPage} from "./pages/order/order-page";
+import UserOrders from "./pages/order/user-orders";
 
 
 function App() {
@@ -26,8 +27,9 @@ function App() {
                     <Route path="/users/:username/basket" element={<Basket/>} />
                     <Route path={'/device/:id'} element={<DevicePage/>}></Route>
                     <Route path={'/create-device'} element={<CreateDevice/>}/>
-                    <Route path={'/orders/:username'} element={<OrderPage/>}/>
+                    <Route path={'/users/:username/orders'} element={<UserOrders/>}/>
                     <Route path={'/about'} element={<About/>}></Route>
+                    <Route path={'/users/:username/orders/:orderId'} element={<OrderPage/>}/>
                 </Routes>
                 <footer>
                     <a href="https://github.com/pyyogi">

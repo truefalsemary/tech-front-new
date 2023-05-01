@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {redirect, useParams} from "react-router-dom";
+import {redirect, useNavigate, useParams} from "react-router-dom";
 import axios, {AxiosError} from "axios";
 import "./basket.css";
 export interface Device {
@@ -21,7 +21,7 @@ export function Basket() {
     const {username} = useParams()
     const [devices, setDevices] = useState<Device[]>([]);
     const [itemQuantities, setItemQuantities] = useState<ItemQuantity[]>([]);
-
+    const redirect = useNavigate();
     React.useEffect(() => {
         const promise = axios({
             method: 'get',
@@ -60,7 +60,7 @@ export function Basket() {
             .then(() => {
                 setItemQuantities([]);
                 setDevices([]);
-                redirect('/shop')
+                redirect(`/users/${username}/orders`);
             })
             .catch(() => {
                 redirect(`/users/${username}/basket`)

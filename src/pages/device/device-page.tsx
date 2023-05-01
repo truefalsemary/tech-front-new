@@ -17,7 +17,7 @@ export function DevicePage(){
     })
 
 
-    const redirect = useNavigate()
+    const redirect = useNavigate();
 
     React.useEffect(() =>{
         const res = axios({
