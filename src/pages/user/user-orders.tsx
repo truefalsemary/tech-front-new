@@ -47,7 +47,8 @@ export function UserOrders() {
 
     return (
         <div>
-            <p>Количество заказов: {orders.length}</p>
+            {/*<h1>Orders</h1>*/}
+            <h1>Количество заказов: {orders.length}</h1>
             <div className={"center"}>
                 <table className={'border-2 mt-4'}>
                     <thead>

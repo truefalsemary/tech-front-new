@@ -69,12 +69,12 @@ export function Shop(){
 
     return (
         <div className="shop">
-            <div className="shopTitle">
-                <h1>TechTonic</h1>
-            </div>
+            {/*<div className="shopTitle">*/}
+            {/*    <h1>TechTonic</h1>*/}
+            {/*</div>*/}
 
             <input value={search.toLowerCase()} onChange={(e) => setSearch(e.target.value.toLowerCase())}
-                   className={'border-2 w-[150px] h-[30px] ml-4 rounded-md'}/>
+                   />
 
             <button className={"addToCartBttn"}
                     onClick={searchDevices}>Поиск

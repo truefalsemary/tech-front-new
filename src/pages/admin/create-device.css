@@ -1,0 +1,18 @@
+form {
+    display: table;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+p {
+    display: table-row;
+}
+
+label {
+    display: table-cell;
+}
+
+input {
+    display: table-cell;
+}

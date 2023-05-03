@@ -26,30 +26,33 @@ export const Navbar = () => {
             <div className="links">
                 <Link to="/shop"> Shop </Link>
                 <Link to="/about"> About </Link>
-                {token !== null && <Link to={`/users/${decodedUsername}/orders`}> Orders </Link>}
 
                 {
-                    token !== null ?
-                        <Link to="/auth" onClick={handleLogout}>
-                            Logout
-                        </Link> :
-                        <Link to={"/auth"}>Login</Link>
+                    ((localStorage.getItem('decoded')?.includes('ADMIN'))) &&
+                    <>
+                        <Link to="/auth" onClick={handleLogout}>Logout</Link>
+                        <Link to="/all-orders">Orders</Link>
+                        <Link to="all-users">Users</Link>
+                    </>
+                }
+                {
+                    ((localStorage.getItem('decoded')?.includes('USER'))) &&
+                    <>
+                        <Link to="/auth" onClick={handleLogout}>Logout</Link>
+                        <Link to={`/users/${decodedUsername}/orders`}> Orders </Link>
+                        <Link to={`/users/${decodedUsername}/basket`}>
+                            <ShoppingCart size={32}/>
+                        </Link>
+                    </>
+                }
+                {
+                    localStorage.getItem('token') == null &&
+                    <Link to="/auth">
+                        Login
+                    </Link>
 
                 }
 
-                {token !== null &&
-                    <Link to={`/users/${decodedUsername}/basket`}>
-                        <ShoppingCart size={32}/>
-                    </Link>}
-                {/*{*/}
-                {/*    token!==null ?*/}
-                {/*    <Link to={`/users/${decodedUsername}/basket`}>*/}
-                {/*        <ShoppingCart size={32} />*/}
-                {/*    </Link> :*/}
-                {/*        <Link to="/auth">*/}
-                {/*            <ShoppingCart size={32} />*/}
-                {/*        </Link>*/}
-                {/*}*/}
 
             </div>
         </div>

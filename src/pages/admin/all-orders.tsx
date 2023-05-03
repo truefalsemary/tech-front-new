@@ -1,9 +1,9 @@
 import React from 'react';
 
-function AdminOrders() {
+function AllOrders() {
     return (
         <div></div>
     );
 }
 
-export default AdminOrders;
+export default AllOrders;
