@@ -18,6 +18,7 @@ export function UserOrders() {
     const [orders, setOrders] = useState(Array<Order>);
     const {username} = useParams();
     const redirect = useNavigate();
+    const [sortDirect, setSortDirect] = useState("ascending");
 
     React.useEffect(() => {
         const res = axios({
@@ -30,6 +31,20 @@ export function UserOrders() {
         }).catch((e) => redirect('/auth'))
     }, [username])
 
+    const sort = (value: string) => {
+        setOrders((state) => [...state.sort((a: any, b: any) => {
+            if (a[value] > b[value]) return sortDirect ==='ascending' ? 1 : -1
+            if (a[value] < b[value]) return sortDirect ==='ascending' ? -1 : 1
+            return 0
+        })])
+    }
+
+    const requestSort = (value: string) => {
+        setSortDirect(sortDirect==='ascending' ? 'descending' : 'ascending')
+        sort(value);
+    }
+
+
     return (
         <div>
             <p>Количество заказов: {orders.length}</p>
@@ -37,9 +52,16 @@ export function UserOrders() {
                 <table className={'border-2 mt-4'}>
                     <thead>
                     <tr>
-                        <th className={'border-2'}>ID</th>
-                        <th className={'border-2'}>SumPrice</th>
-                        <th className={'border-2'}>Details</th>
+                        <th >
+                            <button type="button" onClick={() => requestSort('id')}>
+                                ID
+                            </button>
+                        </th>
+                        <th>
+                            <button type="button" onClick={() => requestSort('sumPrice')}>
+                                SumPrice
+                            </button></th>
+                        <th >Details</th>
                     </tr>
                     </thead>
                     <tbody>
