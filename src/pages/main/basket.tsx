@@ -25,7 +25,7 @@ export function Basket() {
     React.useEffect(() => {
         const promise = axios({
             method: 'get',
-            url: `http://localhost:8080/api/users/${username}/devices`,
+            url: `http://localhost:8080/users/${username}/devices`,
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -50,7 +50,7 @@ export function Basket() {
     const checkout = () => {
         axios({
             method: 'post',
-            url: `http://localhost:8080/api/orders/${username}`,
+            url: `http://localhost:8080/users/${username}/orders`,
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -72,7 +72,7 @@ export function Basket() {
         setDevices(devices.filter(i => i.id !== deviceId));
         axios({
             method: 'post',
-            url: `http://localhost:8080/api/users/${username}/devices/${deviceId}`,
+            url: `http://localhost:8080/users/${username}/devices/${deviceId}`,
             headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${localStorage.getItem('token')}` },
         }).then(() =>
             redirect(`/users/${username}/basket`)

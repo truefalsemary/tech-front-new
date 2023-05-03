@@ -35,7 +35,7 @@ export function DeviceTraffic(){
     React.useEffect(() => {
         const promise = axios({
             method: 'get',
-            url: 'http://localhost:8080/api/devices',
+            url: 'http://localhost:8080/devices',
             headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}
         })
         promise.then((res) => {

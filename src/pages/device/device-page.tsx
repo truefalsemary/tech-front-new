@@ -39,7 +39,7 @@ export function DevicePage(){
     React.useEffect(() =>{
         const res = axios({
             method: 'get',
-            url: `http://localhost:8080/api/devices/${id}`,
+            url: `http://localhost:8080/devices/${id}`,
             headers: {"Content-Type": "multipart/form-data", Authorization: `Bearer ${localStorage.getItem('token')}`},
         })
         res.then((res) =>{
@@ -48,45 +48,15 @@ export function DevicePage(){
     }, [id])
 
 
-    const deleteDevice = () => {
-        axios({
-            method: 'post',
-            url: `http://localhost:8080/api/devices/${device.id}`,
-            headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${localStorage.getItem('token')}` },
-        }).then(() =>
-            redirect('/device-traffic')
-        ).catch((reason: AxiosError) => {
-            if (reason.response!.status === 401) {
-                redirect('/auth')
-            } else if (reason.response!.status === 403) {
-                redirect('/device-traffic')
-            }})
-    }
 
-    const saveCargo = () => {
-        const res = axios({
-            method: 'post',
-            url: `http://localhost:8080/api/devices/${id}`,
-            data: device,
-            headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${localStorage.getItem('token')}` },
-        })
-        res.then((res) => {
-            redirect('/device-traffic')
-        }).catch((reason: AxiosError) => {
-            if (reason.response!.status === 401) {
-                redirect('/auth')
-            } else if (reason.response!.status === 403) {
-                redirect('/device-traffic')
-            }})
-    }
     const addToCart = (username: String, device: Device) => {
         const res = axios({
             method: 'post',
-            url: `http://localhost:8080/api/users/${username}/devices`,
+            url: `http://localhost:8080/users/${username}/devices`,
             data: device,
             headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
         })
-        res.then((res) => {
+        res.then(() => {
             redirect(`/users/${decodedUsername}/basket`)
         }).catch((reason: AxiosError) => {
             if (reason.response!.status === 401) {
@@ -96,6 +66,7 @@ export function DevicePage(){
             }})
     }
 
+    // @ts-ignore
     return(
         <div className={"product-container"}>
             <div className={"product-image-container"} key={device.id}>

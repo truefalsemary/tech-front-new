@@ -22,7 +22,7 @@ export function UserOrders() {
     React.useEffect(() =>{
         const res = axios({
             method: 'get',
-            url: `http://localhost:8080/api/orders/${username}`,
+            url: `http://localhost:8080/users/${username}/orders`,
             headers: {"Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}`},
         })
         res.then((res) =>{

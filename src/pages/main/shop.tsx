@@ -31,7 +31,7 @@ export function Shop(){
     React.useEffect(() => {
         const promise = axios({
             method: 'get',
-            url: 'http://localhost:8080/api/devices',
+            url: 'http://localhost:8080/devices',
             headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}
         })
         promise.then((res) => {
@@ -44,7 +44,7 @@ export function Shop(){
     const addToCart = (username: String, device: Device) => {
         const res = axios({
             method: 'post',
-            url: `http://localhost:8080/api/users/${username}/devices`,
+            url: `http://localhost:8080/users/${username}/devices`,
             data: device,
             headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
         })
@@ -72,7 +72,7 @@ export function Shop(){
                 <h1>TechTonic</h1>
             </div>
 
-            <input value={search.toLowerCase()} onChange={(e) => setSearch(e.target.value)}
+            <input value={search.toLowerCase()} onChange={(e) => setSearch(e.target.value.toLowerCase())}
                    className={'border-2 w-[150px] h-[30px] ml-4 rounded-md'}/>
 
             <button className={"addToCartBttn"}
