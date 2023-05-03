@@ -51,7 +51,8 @@ export function Shop(){
         res.then((res) => {
             redirect(`/users/${username}/basket`)
         }).catch((reason: AxiosError) => {
-            if (reason.response!.status === 401) {
+
+            if (reason.response!.status === 401 || token===null) {
                 redirect('/auth')
             } else if (reason.response!.status === 403) {
                 redirect('/shop')
@@ -85,7 +86,7 @@ export function Shop(){
             <div className="products">
                 {devices.map((device: Device) =>
 
-                    <div key={device.id} className="product" onClick={() => redirect(`/device/${device.id}`)}>
+                    <div key={device.id} className="product">
                         {/*<DeviceImage id={device.id} title={device.title} filename={device.filename}/>*/}
                         <img src={require(`../../assets/devices/${device.filename}`)} alt={device.filename} />
 

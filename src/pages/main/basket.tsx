@@ -42,7 +42,7 @@ export function Basket() {
 
             })
             .catch((e: any) => {
-                alert(e);
+                redirect('/404')
                 // (window.location.href = '/auth');
             });
     }, [username]);

@@ -12,6 +12,7 @@ import {Navbar} from "./components/Navbar";
 import {About} from "./pages/main/about";
 import {OrderPage} from "./pages/order/order-page";
 import {UserOrders} from "./pages/order/user-orders";
+import {NotFoundPage} from "./pages/main/NotFoundPage";
 
 
 function App() {
@@ -30,14 +31,15 @@ function App() {
                     <Route path={'/users/:username/orders'} element={<UserOrders/>}/>
                     <Route path={'/about'} element={<About/>}></Route>
                     <Route path={'/users/:username/orders/:orderId'} element={<OrderPage/>}/>
+                    <Route path={'/404'} element={<NotFoundPage/>}/>
                 </Routes>
-                <footer>
-                    <br/>
-                    <a href="https://github.com/pyyogi">
-                    <p>Created by Trushkova Mary</p>
-                        <img className="github-logo" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub logo" />
-                    </a>
-                </footer>
+                {/*<footer>*/}
+                {/*    <br/>*/}
+                {/*    <a href="https://github.com/pyyogi">*/}
+                {/*        <p><b>Created by Trushkova Mary</b></p>*/}
+                {/*        /!*<img className="github-logo" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub logo" />*!/*/}
+                {/*    </a>*/}
+                {/*</footer>*/}
             </Router>
 
         </div>

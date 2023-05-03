@@ -3,7 +3,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import {AxiosError} from "axios";
 import jwtDecode from "jwt-decode";
-import "./device-page.css"
+import "./device-page.css";
 
 export interface Device {
     id: number;
@@ -15,19 +15,23 @@ export interface Device {
     filename: string;
 }
 
-export function DevicePage(){
+export function DevicePage() {
     const {id} = useParams()
-    const [device, setDevice] = React.useState<Device>({
-        id: 0,
-        title: '',
-        price: 0,
-        description: '',
-        type: '',
-        brand: '',
-        filename: ''
-    })
+    const [device, setDevice] = React.useState<Device>(
+        {
+            id: 0,
+            title: '',
+            price: 0,
+            description: '',
+            type: '',
+            brand: '',
+            filename: ''
+        }
+    );
     const redirect = useNavigate();
-    const imageUrl:string = "../../assets/devices/"+device.filename;
+    const [deviceImageUrl, setDeviceImageUrl] = React.useState<string>("");
+
+
     const token: string | null = localStorage.getItem('token');
     let decodedUsername: string = "";
 
@@ -36,17 +40,17 @@ export function DevicePage(){
     }
 
 
-    React.useEffect(() =>{
+    React.useEffect(() => {
         const res = axios({
             method: 'get',
             url: `http://localhost:8080/devices/${id}`,
-            headers: {"Content-Type": "multipart/form-data", Authorization: `Bearer ${localStorage.getItem('token')}`},
+            // headers: {"Content-Type": "multipart/form-data", Authorization: `Bearer ${localStorage.getItem('token')}`},
         })
-        res.then((res) =>{
-            setDevice({...res.data})
-        }).catch(() => redirect('/auth'))
+        res.then((res) => {
+            setDevice(res.data);
+            setDeviceImageUrl(res.data.filename);
+        }).catch(() => redirect('/404'))
     }, [id])
-
 
 
     const addToCart = (username: String, device: Device) => {
@@ -54,7 +58,7 @@ export function DevicePage(){
             method: 'post',
             url: `http://localhost:8080/users/${username}/devices`,
             data: device,
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
+            headers: {"Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}`},
         })
         res.then(() => {
             redirect(`/users/${decodedUsername}/basket`)
@@ -63,16 +67,24 @@ export function DevicePage(){
                 redirect('/auth')
             } else if (reason.response!.status === 403) {
                 redirect('/shop')
-            }})
+            }
+        })
     }
 
-    // @ts-ignore
-    return(
-        <div className={"product-container"}>
+    return (
+        <div className={"product-container"} key={device.id}>
             <div className={"product-image-container"} key={device.id}>
-                <p>{device.filename}</p>
-                {/*<img className={"product-image"} src={require(imageUrl)} alt={device.filename} />*/}
+                {device ?
+                    <img className={'product-image'} src={require(`../../assets/devices/${deviceImageUrl}` as any)}
+                         alt={device.filename}/>
+                    :
+                    <p>Loading...</p>
+
+                }
             </div>
+
+
+
             <div>
                 <h1 className="product-name">{device.title}</h1>
                 <div className="product-details">
@@ -80,12 +92,14 @@ export function DevicePage(){
                     <p><b>Price:</b> ${device.price}</p>
                     <p><b>Description:</b></p>
                     <p>{device.description}</p>
+                    <p><b>Brand:</b></p>
+                    <p>{device.brand}</p>
                     <button className="addToCartBttn" onClick={() => addToCart(decodedUsername, device)}>
                         Add To Basket
                     </button>
                 </div>
             </div>
         </div>
-)
+    )
 
 }
