@@ -119,15 +119,17 @@ export function Basket() {
                                 <b>{device.title}</b>
                             </p>
                             <p>{device.price}₽</p>
-                        </div>
-                        <div className="countHandler">
-                            <button onClick={() => updateItemQuantity(device.id, (itemQuantities.find(item => item.deviceId === device.id)?.quantity || 0) - 1)}> - </button>
-                            <b>{itemQuantities.find(item => item.deviceId === device.id)?.quantity || 0}</b>
-                            <button onClick={() => updateItemQuantity(device.id, (itemQuantities.find(item => item.deviceId === device.id)?.quantity || 0) + 1)}> + </button>
+                            <div className="countHandler">
+                                <button onClick={() => updateItemQuantity(device.id, (itemQuantities.find(item => item.deviceId === device.id)?.quantity || 0) - 1)}> - </button>
+
+                                <b>{itemQuantities.find(item => item.deviceId === device.id)?.quantity || 0}</b>
+                                <button onClick={() => updateItemQuantity(device.id, (itemQuantities.find(item => item.deviceId === device.id)?.quantity || 0) + 1)}> + </button>
+                            </div>
+
                         </div>
 
 
-                        {username!==undefined && <button className="addToCartBttn" onClick={() => deleteDeviceFromUser(device.id)}>
+                        {username!==undefined && <button  onClick={() => deleteDeviceFromUser(device.id)}>
                             Delete From Basket
                         </button>}
 
