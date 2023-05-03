@@ -32,6 +32,7 @@ function App() {
                     <Route path={'/users/:username/orders/:orderId'} element={<OrderPage/>}/>
                 </Routes>
                 <footer>
+                    <br/>
                     <a href="https://github.com/pyyogi">
                     <p>Created by Trushkova Mary</p>
                         <img className="github-logo" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub logo" />

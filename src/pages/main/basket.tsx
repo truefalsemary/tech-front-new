@@ -70,6 +70,7 @@ export function Basket() {
 
     const deleteDeviceFromUser = (deviceId: number) => {
         setDevices(devices.filter(i => i.id !== deviceId));
+        setItemQuantities(itemQuantities.filter(i => i.deviceId !== deviceId));
         axios({
             method: 'post',
             url: `http://localhost:8080/users/${username}/devices/${deviceId}`,
@@ -88,6 +89,7 @@ export function Basket() {
         const updatedQuantity = Math.max(quantity, 1); // Ensure quantity is not less than 1
         const updatedItemQuantity = itemQuantities.map(item => {
             if (item.deviceId === deviceId) {
+
                 return { ...item, quantity: updatedQuantity };
             }
             return item;
@@ -125,13 +127,16 @@ export function Basket() {
                                 <b>{itemQuantities.find(item => item.deviceId === device.id)?.quantity || 0}</b>
                                 <button onClick={() => updateItemQuantity(device.id, (itemQuantities.find(item => item.deviceId === device.id)?.quantity || 0) + 1)}> + </button>
                             </div>
+                            <div>
+                            {username!==undefined && <button className={"special-buttons"} onClick={() => deleteDeviceFromUser(device.id)}>
+                                Delete From Basket
+                            </button>}
+                            </div>
 
                         </div>
 
 
-                        {username!==undefined && <button  onClick={() => deleteDeviceFromUser(device.id)}>
-                            Delete From Basket
-                        </button>}
+
 
 
                     </div>

@@ -11,6 +11,13 @@ export const Navbar = () => {
     if (token !== null) {
         decodedUsername = (jwtDecode(token) as { username: string }).username;
     }
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        window.location.reload(); // Reload the page
+    };
+
+
     return (
         <div className="navbar">
             <div className="logo">
@@ -18,18 +25,22 @@ export const Navbar = () => {
             </div>
             <div className="links">
                 <Link to="/shop"> Shop </Link>
-                <Link to="/about" > About </Link>
+                <Link to="/about"> About </Link>
                 {token !== null && <Link to={`/users/${decodedUsername}/orders`}> Orders </Link>}
 
                 {
                     token !== null ?
-                        <Link to={"/auth"}>Logout</Link> :
+                        <Link to="/auth" onClick={handleLogout}>
+                            Logout
+                        </Link> :
                         <Link to={"/auth"}>Login</Link>
 
                 }
-                <Link to={`/users/${decodedUsername}/basket`}>
-                    <ShoppingCart size={32}/>
-                </Link>
+
+                {token !== null &&
+                    <Link to={`/users/${decodedUsername}/basket`}>
+                        <ShoppingCart size={32}/>
+                    </Link>}
                 {/*{*/}
                 {/*    token!==null ?*/}
                 {/*    <Link to={`/users/${decodedUsername}/basket`}>*/}

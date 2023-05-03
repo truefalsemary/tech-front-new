@@ -23,6 +23,7 @@ export function SignIn({changeStage}: {changeStage: React.Dispatch<React.SetStat
             localStorage.setItem('token', res.data.token)
             localStorage.setItem('decoded', window.atob(res.data.token.split(".")[1]))
             redirect('/')
+            window.location.reload(); // Reload the page
         })
     }
 

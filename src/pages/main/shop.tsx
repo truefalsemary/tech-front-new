@@ -32,7 +32,7 @@ export function Shop(){
         const promise = axios({
             method: 'get',
             url: 'http://localhost:8080/devices',
-            headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}
+            // headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}
         })
         promise.then((res) => {
             setDevices(res.data)
@@ -49,7 +49,7 @@ export function Shop(){
             headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
         })
         res.then((res) => {
-            redirect(`/users/${decodedUsername}/basket`)
+            redirect(`/users/${username}/basket`)
         }).catch((reason: AxiosError) => {
             if (reason.response!.status === 401) {
                 redirect('/auth')
