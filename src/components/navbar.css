@@ -8,18 +8,18 @@
     padding: 0 50px;
 }
 
-.links {
-    margin-left: 50px;
-    display: flex;
-    align-items: center;
-}
-
 .logo a {
     text-decoration: none;
     color: white;
     font-size: 32px;
     font-weight: bold;
 }
+
+.logo:hover {
+    transform: scale(1.05);
+    transition: all 0.2s ease-in-out;
+}
+
 
 .links {
     margin-right: 50px;
@@ -32,4 +32,28 @@
     color: white;
     margin-left: 20px;
     font-size: 25px;
+    transition: all 0.2s ease-in-out;
+}
+
+.links a:hover {
+    color: dodgerblue;
+    transform: scale(1.1);
+}
+
+.active-link {
+    color: dodgerblue !important;
+    transform: scale(1.1);
+}
+
+#cartlink {
+    margin-top: 10px;
+    margin-right: 15px;
+}
+
+#NavTitle {
+    text-align: center;
+    font-size: 35px;
+    background-image: linear-gradient(to right, #00ffcc, #0066ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }

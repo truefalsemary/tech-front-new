@@ -18,7 +18,7 @@ export const Navbar = () => {
             </div>
             <div className="links">
                 <Link to="/shop"> Shop </Link>
-                <Link to="/about"> About </Link>
+                <Link to="/about" > About </Link>
                 {token !== null && <Link to={`/users/${decodedUsername}/orders`}> Orders </Link>}
 
                 {

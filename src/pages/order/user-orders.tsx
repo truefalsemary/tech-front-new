@@ -16,16 +16,16 @@ interface User {
 
 export function UserOrders() {
     const [orders, setOrders] = useState(Array<Order>);
-    const { username } = useParams();
+    const {username} = useParams();
     const redirect = useNavigate();
 
-    React.useEffect(() =>{
+    React.useEffect(() => {
         const res = axios({
             method: 'get',
             url: `http://localhost:8080/users/${username}/orders`,
             headers: {"Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}`},
         })
-        res.then((res) =>{
+        res.then((res) => {
             setOrders(res.data);
         }).catch((e) => redirect('/auth'))
     }, [username])
@@ -34,22 +34,26 @@ export function UserOrders() {
         <div>
             <p>Количество заказов: {orders.length}</p>
             <div className={"center"}>
-            <table className={'border-2 mt-4'}>
-                <thead>
-                <th className={'border-2'}>ID</th>
-                <th className={'border-2'}>SumPrice</th>
-                <th className={'border-2'}>Details</th>
-                </thead>
-                <tbody>
-                {orders.map((order: Order) => (
+                <table className={'border-2 mt-4'}>
+                    <thead>
                     <tr>
-                        <td>{order.id} </td>
-                        <td>{order.sumPrice} ₽</td>
-                        <td key={order.id} onClick={() => redirect(`/users/${username}/orders/${order.id}`)}>View details...</td>
+                        <th className={'border-2'}>ID</th>
+                        <th className={'border-2'}>SumPrice</th>
+                        <th className={'border-2'}>Details</th>
                     </tr>
-                ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {orders.map((order: Order) => (
+                        <tr key={order.id}>
+                            <td>{order.id} </td>
+                            <td>{order.sumPrice} ₽</td>
+                            <td key={order.id} onClick={() => redirect(`/users/${username}/orders/${order.id}`)}>View
+                                details...
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
             </div>
         </div>
     );
