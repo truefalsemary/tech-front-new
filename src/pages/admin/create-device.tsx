@@ -5,7 +5,7 @@ import {Device} from "../device/device-traffic";
 import './create-device.css';
 
 export function CreateDevice() {
-    const [devices, setDevices] = React.useState<Device>({
+    const [device, setDevice] = React.useState<Device>({
         id: 0,
         title: '',
         price: 0,
@@ -20,8 +20,8 @@ export function CreateDevice() {
     const addCargo = () => {
         const res = axios({
             method: 'post',
-            url: 'http://localhost:8080/devices',
-            data: devices,
+            url: 'http://localhost:8080/admin/devices',
+            data: device,
             headers: {"Content-Type": "multipart/form-data", Authorization: `Bearer ${localStorage.getItem('token')}`},
 
         })
@@ -37,39 +37,35 @@ export function CreateDevice() {
     }
 
     return (
-        <div>
-            <form>
-                <p>
+        <div className={"create-device"}>
+            <form className={"create-device"}>
+                    
                     <label>Название:</label>
-                    <input placeholder={"Тумбочка"} className={'border-2 rounded-md'} value={devices.title}
-                           onChange={(e) => setDevices({...devices, title: e.target.value})}/><br/>
-                </p>
-                <p>
+                    <input placeholder={"Тумбочка"} className={'border-2 rounded-md'} value={device.title}
+                           onChange={(e) => setDevice({...device, title: e.target.value})}/><br/>
+
                     <label>Цена:</label>
-                    <input placeholder={"4000000"} className={'border-2 rounded-md'} value={devices.price}
-                           onChange={(e) => setDevices({...devices, price: Number(e.target.value)})}/><br/>
-                </p>
-                <p>
+                    <input placeholder={"4000000"} className={'border-2 rounded-md'} value={device.price}
+                           onChange={(e) => setDevice({...device, price: Number(e.target.value)})}/><br/>
+
+
                     <label>Описание:</label>
-                    <input placeholder={"Четыре угла"} className={'border-2 rounded-md'} value={devices.description}
-                           onChange={(e) => setDevices({...devices, description: e.target.value})}/><br/>
-                </p>
-                <p>
+                    <input placeholder={"Четыре угла"} className={'border-2 rounded-md'} value={device.description}
+                           onChange={(e) => setDevice({...device, description: e.target.value})}/><br/>
+
                     <label>Тип:</label>
-                    <input placeholder={"Мебель"} className={'border-2 rounded-md'} value={devices.type}
-                           onChange={(e) => setDevices({...devices, type: e.target.value})}/><br/>
-                </p>
-                <p>
+                    <input placeholder={"Мебель"} className={'border-2 rounded-md'} value={device.type}
+                           onChange={(e) => setDevice({...device, type: e.target.value})}/><br/>
+
                     <label>Бренд:</label>
-                    <input placeholder={"Зарафшан"} className={'border-2 rounded-md'} value={devices.brand}
-                           onChange={(e) => setDevices({...devices, brand: e.target.value})}/><br/>
-                </p>
-                <p>
+                    <input placeholder={"Зарафшан"} className={'border-2 rounded-md'} value={device.brand}
+                           onChange={(e) => setDevice({...device, brand: e.target.value})}/><br/>
+
                     <label>Url файла:</label>
-                    <input placeholder={"2023-04-15"} className={'border-2 rounded-md'} value={devices.filename}
-                           onChange={(e) => setDevices({...devices, filename: e.target.value})}/><br/>
-                </p>
-                <button onClick={addCargo}>Добавить груз</button>
+                    <input placeholder={"2023-04-15"} className={'border-2 rounded-md'} value={device.filename}
+                           onChange={(e) => setDevice({...device, filename: e.target.value})}/><br/>
+
+                <button onClick={addCargo}>Добавить девайс</button>
                 <br/>
             </form>
         </div>

@@ -32,10 +32,10 @@ export function SignUp({changeStage}: {changeStage: React.Dispatch<React.SetStat
             <p >Регистрация</p>
             <br/>
             <label>Логин</label>
-            <input className={'w-full h-[40px] mt-2 rounded-md border-2'} {...username} />
+            <input minLength={5} className={'w-full h-[40px] mt-2 rounded-md border-2'} {...username} />
             <br/>
             <label>Пароль</label>
-            <input type="password" {...password} />
+            <input minLength={2} type="password" {...password} />
             <br/>
             <label>Повторите<br/> пароль</label>
             <input type="password" {...passwordConfirm} />

@@ -31,7 +31,7 @@ export function SignIn({changeStage}: {changeStage: React.Dispatch<React.SetStat
     return(
         <div>
             <br/>
-            <p className={'text-[24px] text-center'}>Авторизация</p>
+            <p>Авторизация</p>
             <label>Логин</label>
             <input  {...username} />
             <br/>

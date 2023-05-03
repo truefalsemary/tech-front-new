@@ -1,18 +1,18 @@
-form {
+.create-device form {
     display: table;
     align-items: center;
     display: flex;
     flex-direction: column;
 }
 
-p {
-    display: table-row;
-}
+/*p {*/
+/*    display: table-row;*/
+/*}*/
 
-label {
-    display: table-cell;
-}
+/*.create-device > label {*/
+/*    display: table-cell;*/
+/*}*/
 
-input {
-    display: table-cell;
-}
+/*.create-device > input {*/
+/*    display: table-cell;*/
+/*}*/

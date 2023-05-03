@@ -14,7 +14,8 @@ import {OrderPage} from "./pages/user/order-page";
 import {UserOrders} from "./pages/user/user-orders";
 import {NotFoundPage} from "./pages/main/NotFoundPage";
 import {AllUsers} from "./pages/admin/all-users";
-import AllOrders from "./pages/admin/all-orders";
+import {AllOrders} from "./pages/admin/all-orders";
+import {AdminOrderPage} from "./pages/admin/admin-order-page";
 
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
                     <Route path={'/404'} element={<NotFoundPage/>}/>
                     <Route path={'/all-users'} element={<AllUsers/>}/>
                     <Route path={'/all-orders'} element={<AllOrders/>}/>
+                    <Route path={'/orders/:orderId'} element={<AdminOrderPage/>}/>
                 </Routes>
                 {/*<footer>*/}
                 {/*    <br/>*/}
