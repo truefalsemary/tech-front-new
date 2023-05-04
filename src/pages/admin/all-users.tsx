@@ -92,7 +92,7 @@ export function AllUsers() {
                         </th>
 
                         <th>
-                            <button type="button" onClick={() => requestSort('usersname')}>
+                            <button type="button" onClick={() => requestSort('username')}>
                                 username
                             </button></th>
 

@@ -1,8 +1,17 @@
 import * as React from 'react'
 import axios, {AxiosError} from "axios";
 import {useNavigate} from "react-router-dom";
-import {Device} from "../device/device-traffic";
 import './create-device.css';
+
+export interface Device {
+    id: number;
+    title: string;
+    price: number;
+    description: string;
+    type: string;
+    brand: string;
+    filename: string;
+}
 
 export function CreateDevice() {
     const [device, setDevice] = React.useState<Device>({
@@ -17,16 +26,16 @@ export function CreateDevice() {
 
     const redirect = useNavigate()
 
-    const addCargo = () => {
+    const addDevice = () => {
         const res = axios({
             method: 'post',
-            url: 'http://localhost:8080/admin/devices',
+            url: 'http://localhost:8080/admins/devices',
             data: device,
-            headers: {"Content-Type": "multipart/form-data", Authorization: `Bearer ${localStorage.getItem('token')}`},
+            headers: {Authorization: `Bearer ${localStorage.getItem('token')}`},
 
         })
         res.then((res) => {
-            redirect('/device-traffic')
+            redirect('/shop')
         }).catch((reason: AxiosError) => {
             if (reason.response!.status === 401) {
                 redirect('/auth')
@@ -65,7 +74,7 @@ export function CreateDevice() {
                     <input placeholder={"2023-04-15"} className={'border-2 rounded-md'} value={device.filename}
                            onChange={(e) => setDevice({...device, filename: e.target.value})}/><br/>
 
-                <button onClick={addCargo}>Добавить девайс</button>
+                <button onClick={addDevice}>Добавить девайс</button>
                 <br/>
             </form>
         </div>

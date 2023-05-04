@@ -1,8 +1,10 @@
-import React, { useState } from "react";
-import {useNavigate} from "react-router-dom";
+import React, {useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
 import axios, {AxiosError} from "axios";
 import "./shop.css";
 import jwtDecode from "jwt-decode";
+import SafeImage from "./safe-image";
+import {DeviceImage} from "../../device_image";
 
 export interface Device {
     id: number;
@@ -14,11 +16,12 @@ export interface Device {
     filename: string;
 }
 
-export function Shop(){
+export function Shop() {
     const redirect = useNavigate()
     const [devices, setDevices] = useState<Device[]>([]);
     const [initialDevices, setInitialDevices] = React.useState<Array<Device>>([])
     const [search, setSearch] = React.useState('')
+    const [imageSource, setImageSource] = useState<string | null>(null);
 
     const token: string | null = localStorage.getItem('token');
     let decodedUsername: string = "";
@@ -46,26 +49,48 @@ export function Shop(){
             method: 'post',
             url: `http://localhost:8080/users/${username}/devices`,
             data: device,
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}` },
+            headers: {"Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}`},
         })
         res.then((res) => {
             redirect(`/users/${username}/basket`)
         }).catch((reason: AxiosError) => {
 
-            if (reason.response!.status === 401 || token===null) {
+            if (reason.response!.status === 401 || token === null) {
                 redirect('/auth')
             } else if (reason.response!.status === 403) {
                 redirect('/shop')
-            }})
+            }
+        })
     }
 
     const searchDevices = () => {
         setDevices([...initialDevices.filter((a: Device) => {
-            return a.title.toLowerCase()?.includes(search) || String(a.price).toLowerCase()===search
+            return a.title.toLowerCase()?.includes(search) || String(a.price).toLowerCase() === search
                 || a.description.toLowerCase()?.includes(search) || a.type.toLowerCase()?.includes(search)
                 || a.brand.toLowerCase()?.includes(search)
         })])
     }
+
+    const deleteDevice = (deviceId: number) => {
+        setDevices(devices.filter(i => i.id !== deviceId));
+        setInitialDevices(initialDevices.filter(i => i.id !== deviceId));
+        axios({
+            method: 'get',
+            url: `http://localhost:8080/admins/devices/delete/${deviceId}`,
+            headers: {"Content-Type": "multipart/form-data", Authorization: `Bearer ${localStorage.getItem('token')}`},
+        }).then(() => {
+                window.location.reload();
+                redirect("/shop");
+            }
+        ).catch((reason: AxiosError) => {
+            if (reason.response!.status === 401) {
+                redirect('/auth')
+            } else if (reason.response!.status === 403) {
+                redirect('/shop')
+            }
+        })
+    }
+
 
     return (
         <div className="shop">
@@ -74,7 +99,7 @@ export function Shop(){
             {/*</div>*/}
 
             <input value={search.toLowerCase()} onChange={(e) => setSearch(e.target.value.toLowerCase())}
-                   />
+            />
 
             <button className={"addToCartBttn"}
                     onClick={searchDevices}>Поиск
@@ -88,49 +113,36 @@ export function Shop(){
 
                     <div key={device.id} className="product">
                         {/*<DeviceImage id={device.id} title={device.title} filename={device.filename}/>*/}
-                        <img src={require(`../../assets/devices/${device.filename}`)} alt={device.filename} />
-
+                        <img src={require(`../../assets/devices/${device.filename}`)} alt={device.filename}/>
+                        {/*{deviceImage(device.filename)}*/}
                         <div className="description">
                             <p>
                                 <b>{device.title}</b>
                             </p>
                             <p>{device.price}₽</p>
                         </div>
-                        <button className="addToCartBttn" onClick={() => addToCart(decodedUsername, device)}>
-                            Add To Basket
-                        </button>
-                    </div>
+                        {
+                            ((localStorage.getItem('decoded')?.includes('USER'))) &&
+                            <button className="addToCartBttn" onClick={() => addToCart(decodedUsername, device)}>
+                                Add To Basket
+                            </button>
+                        }
 
+                        {
+                            ((localStorage.getItem('decoded')?.includes('ADMIN'))) &&
+                            <div>
+                                <button className="addToCartBttn"
+                                        onClick={() => redirect(`/update-device/${device.id}`)}>Update
+                                </button>
+
+                                <button className="addToCartBttn" onClick={() => deleteDevice(device.id)}>
+                                    Delete
+                                </button>
+                            </div>
+                        }
+                    </div>
                 )}
             </div>
         </div>
-        // <div className="container">
-        //     <div className="row">
-        //
-        //         <p>Количество девайсов: {devices.length}</p>
-        //         <table className={'border-2 mt-4'}>
-        //             <thead>
-        //             <th className={'border-2'} >Название</th>
-        //             <th className={'border-2'} >Цена</th>
-        //             <th className={'border-2'} >Описание</th>
-        //             <th className={'border-2'} >Бренд</th>
-        //             <th className={'border-2'} >Тип</th>
-        //             <th className={'border-2'} >Название файла</th>
-        //             </thead>
-        //             <tbody>
-        //             {devices.map((device: Device) => (
-        //                 <tr className={'border-2'} key={device.id} onClick={() => redirect(`/device/${device.id}`)}>
-        //                     <td className={'border-2 text-center'}>{device.title} </td>
-        //                     <td className={'border-2 text-center'}>{device.price} </td>
-        //                     <td className={'border-2 text-center'}>{device.description} </td>
-        //                     <td className={'border-2 text-center'}>{device.brand} </td>
-        //                     <td className={'border-2 text-center'}>{device.type} </td>
-        //                     <td className={'border-2 text-center'}>{device.filename} </td>
-        //                 </tr>
-        //             ))}
-        //             </tbody>
-        //         </table>
-        //     </div>
-        // </div>
     );
 }

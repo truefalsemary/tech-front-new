@@ -31,6 +31,7 @@ export const Navbar = () => {
                     ((localStorage.getItem('decoded')?.includes('ADMIN'))) &&
                     <>
                         <Link to="/auth" onClick={handleLogout}>Logout</Link>
+                        <Link to="/create-device">Create</Link>
                         <Link to="/all-orders">Orders</Link>
                         <Link to="all-users">Users</Link>
                     </>
