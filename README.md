@@ -12,4 +12,13 @@
 2) Запусти бэкэнд: https://github.com/pyyogi/tech-tonic 
 3) `npm start` - напиши в терминале, чтобы запустить приложение
 
-## Главная страница магазина
+## Главная страница для пользователя
+![Alt text](./public/user_shop_page.png)
+## Главная страница для администратора
+![Alt text](./public/admin_shop_page.png)
+## Корзина пользователя
+![Alt text](./public/user_basket.png)
+## Заказы пользователя
+![Alt text](./public/user_orders.png)
+## Страница со всеми пользователями (доступна только администратору)
+![Alt text](./public/admin_users.png)
