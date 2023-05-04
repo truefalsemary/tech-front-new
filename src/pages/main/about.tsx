@@ -36,7 +36,7 @@ export function About () {
 
     return (
         <ContactWrapper>
-            <Title>Contact Me</Title>
+            <Title>Контакты:</Title>
             <div className="col-md-3 text-center">
                 <ul className="list-unstyled mb-0">
                     <li>

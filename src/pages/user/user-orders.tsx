@@ -55,14 +55,14 @@ export function UserOrders() {
                     <tr>
                         <th >
                             <button type="button" onClick={() => requestSort('id')}>
-                                ID
+                                Номер заказа
                             </button>
                         </th>
                         <th>
                             <button type="button" onClick={() => requestSort('sumPrice')}>
-                                SumPrice
+                                Сумма
                             </button></th>
-                        <th >Details</th>
+                        <th >Детали</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -70,8 +70,7 @@ export function UserOrders() {
                         <tr key={order.id}>
                             <td>{order.id} </td>
                             <td>{order.sumPrice} ₽</td>
-                            <td key={order.id} onClick={() => redirect(`/users/${username}/orders/${order.id}`)}>View
-                                details...
+                            <td key={order.id} onClick={() => redirect(`/users/${username}/orders/${order.id}`)}>Смотреть детали...
                             </td>
                         </tr>
                     ))}

@@ -24,23 +24,23 @@ export const Navbar = () => {
                 <Link to="/">TechTonic</Link>
             </div>
             <div className="links">
-                <Link to="/shop"> Shop </Link>
-                <Link to="/about"> About </Link>
+                <Link to="/shop"> Магазин </Link>
+                <Link to="/about"> Об авторе </Link>
 
                 {
                     ((localStorage.getItem('decoded')?.includes('ADMIN'))) &&
                     <>
-                        <Link to="/auth" onClick={handleLogout}>Logout</Link>
-                        <Link to="/create-device">Create</Link>
-                        <Link to="/all-orders">Orders</Link>
-                        <Link to="all-users">Users</Link>
+                        <Link to="/auth" onClick={handleLogout}>Выйти</Link>
+                        <Link to="/create-device">Создать</Link>
+                        <Link to="/all-orders">Заказы</Link>
+                        <Link to="all-users">Пользователи</Link>
                     </>
                 }
                 {
                     ((localStorage.getItem('decoded')?.includes('USER'))) &&
                     <>
-                        <Link to="/auth" onClick={handleLogout}>Logout</Link>
-                        <Link to={`/users/${decodedUsername}/orders`}> Orders </Link>
+                        <Link to="/auth" onClick={handleLogout}>Выйти</Link>
+                        <Link to={`/users/${decodedUsername}/orders`}> Заказы </Link>
                         <Link to={`/users/${decodedUsername}/basket`}>
                             <ShoppingCart size={32}/>
                         </Link>
@@ -49,7 +49,7 @@ export const Navbar = () => {
                 {
                     localStorage.getItem('token') == null &&
                     <Link to="/auth">
-                        Login
+                        Войти
                     </Link>
 
                 }

@@ -86,7 +86,7 @@ export function UpdateDevice() {
                 <input placeholder={device.filename} className={'border-2 rounded-md'} value={device.filename}
                        onChange={(e) => setDevice({...device, filename: e.target.value})}/><br/>
 
-                <button onClick={updateDevice}>Update</button>
+                <button onClick={updateDevice}>Обновить</button>
                 <br/>
             </form>
         </div>

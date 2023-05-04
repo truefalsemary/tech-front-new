@@ -87,28 +87,28 @@ export function AllUsers() {
                     <tr>
                         <th >
                             <button type="button" onClick={() => requestSort('id')}>
-                                userID
+                                Номер пользователя
                             </button>
                         </th>
 
                         <th>
                             <button type="button" onClick={() => requestSort('username')}>
-                                username
+                                Имя пользователя
                             </button></th>
 
                         <th >
                             <button type="button" onClick={() => requestSort('countOrders')}>
-                                count orders
+                                Количество заказаов
                             </button>
                         </th>
 
                         <th >
                             <button type="button" onClick={() => requestSort('totalCost')}>
-                                user cost
+                                Потрачено
                             </button>
                         </th>
 
-                        <th >Actions</th>
+                        <th >Действия</th>
 
 
                     </tr>

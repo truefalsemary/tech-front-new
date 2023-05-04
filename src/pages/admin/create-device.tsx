@@ -50,7 +50,7 @@ export function CreateDevice() {
             <form className={"create-device"}>
                     
                     <label>Название:</label>
-                    <input placeholder={"Тумбочка"} className={'border-2 rounded-md'} value={device.title}
+                    <input placeholder={"АТУ"} className={'border-2 rounded-md'} value={device.title}
                            onChange={(e) => setDevice({...device, title: e.target.value})}/><br/>
 
                     <label>Цена:</label>
@@ -59,19 +59,19 @@ export function CreateDevice() {
 
 
                     <label>Описание:</label>
-                    <input placeholder={"Четыре угла"} className={'border-2 rounded-md'} value={device.description}
+                    <input placeholder={"Назад в будущее"} className={'border-2 rounded-md'} value={device.description}
                            onChange={(e) => setDevice({...device, description: e.target.value})}/><br/>
 
                     <label>Тип:</label>
-                    <input placeholder={"Мебель"} className={'border-2 rounded-md'} value={device.type}
+                    <input placeholder={"Телефон"} className={'border-2 rounded-md'} value={device.type}
                            onChange={(e) => setDevice({...device, type: e.target.value})}/><br/>
 
                     <label>Бренд:</label>
-                    <input placeholder={"Зарафшан"} className={'border-2 rounded-md'} value={device.brand}
+                    <input placeholder={"Сколково"} className={'border-2 rounded-md'} value={device.brand}
                            onChange={(e) => setDevice({...device, brand: e.target.value})}/><br/>
 
                     <label>Url файла:</label>
-                    <input placeholder={"2023-04-15"} className={'border-2 rounded-md'} value={device.filename}
+                    <input placeholder={"6.png"} className={'border-2 rounded-md'} value={device.filename}
                            onChange={(e) => setDevice({...device, filename: e.target.value})}/><br/>
 
                 <button onClick={addDevice}>Добавить девайс</button>

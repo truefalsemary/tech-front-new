@@ -3,8 +3,6 @@ import {Link, useNavigate} from "react-router-dom";
 import axios, {AxiosError} from "axios";
 import "./shop.css";
 import jwtDecode from "jwt-decode";
-import SafeImage from "./safe-image";
-import {DeviceImage} from "../../device_image";
 
 export interface Device {
     id: number;
@@ -124,7 +122,7 @@ export function Shop() {
                         {
                             ((localStorage.getItem('decoded')?.includes('USER'))) &&
                             <button className="addToCartBttn" onClick={() => addToCart(decodedUsername, device)}>
-                                Add To Basket
+                                В корзину
                             </button>
                         }
 
@@ -132,11 +130,11 @@ export function Shop() {
                             ((localStorage.getItem('decoded')?.includes('ADMIN'))) &&
                             <div>
                                 <button className="addToCartBttn"
-                                        onClick={() => redirect(`/update-device/${device.id}`)}>Update
+                                        onClick={() => redirect(`/update-device/${device.id}`)}>Изменить
                                 </button>
 
                                 <button className="addToCartBttn" onClick={() => deleteDevice(device.id)}>
-                                    Delete
+                                    Удалить
                                 </button>
                             </div>
                         }

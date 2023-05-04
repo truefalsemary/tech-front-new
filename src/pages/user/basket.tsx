@@ -101,15 +101,15 @@ export function Basket() {
     return (
         <div className="cart">
             <div>
-                <h1>Your Cart Items</h1>
+                <h1>Моя корзина:</h1>
             </div>
             <div className="cart">
-                {itemQuantities.map((item: ItemQuantity) =>
-                    <div key={item.deviceId}>
-                        <b>{item.deviceId}</b>: {item.quantity}
-                        <br/>
-                    </div>
-                )}
+                {/*{itemQuantities.map((item: ItemQuantity) =>*/}
+                {/*    <div key={item.deviceId}>*/}
+                {/*        <b>{item.deviceId}</b>: {item.quantity}*/}
+                {/*        <br/>*/}
+                {/*    </div>*/}
+                {/*)}*/}
 
                 {devices.map((device: Device) =>
                     <div key={device.id} className="cartItem">
@@ -129,7 +129,7 @@ export function Basket() {
                             </div>
                             <div>
                             {username!==undefined && <button className={"special-buttons"} onClick={() => deleteDeviceFromUser(device.id)}>
-                                Delete From Basket
+                                Удалить
                             </button>}
                             </div>
 
@@ -147,7 +147,7 @@ export function Basket() {
 
                 <button className={"special-buttons"} onClick={() => redirect('/shop')}>Continue Shopping</button>
                 <button className={"special-buttons"} onClick={() => checkout()} disabled={devices.length === 0}>
-                    Checkout
+                    Заказать
                 </button>
             </div>
 

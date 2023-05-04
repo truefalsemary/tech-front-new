@@ -54,9 +54,9 @@ export function AdminOrderPage() {
             <div className={"details"}>
                 {order ? (
                     <>
-                        <p>User: {order.user.username}</p>
+                        <p>Пользователь: {order.user.username}</p>
                         <hr/>
-                        <p>Order ID: {order.id}</p>
+                        <p>Номер заказа: {order.id}</p>
                         <hr/>
                         <ul>
                             {order.orderItems.map((item) => (
@@ -66,10 +66,10 @@ export function AdminOrderPage() {
                             ))}
                         </ul>
                         <hr/>
-                        <p>Total Price: {order.sumPrice} ₽</p>
+                        <p>Общая сумма: {order.sumPrice} ₽</p>
                     </>
                 ) : (
-                    <p>Loading...</p>
+                    <p>Загрузка...</p>
                 )}
             </div>
         </div>
