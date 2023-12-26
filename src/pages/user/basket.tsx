@@ -111,7 +111,13 @@ export function Basket() {
                 {/*    </div>*/}
                 {/*)}*/}
 
-                {devices.map((device: Device) =>
+                {devices.length == 0 ?
+                    <div>
+                        Корзина пуста
+                    </div>
+                    :
+
+                    devices.map((device: Device) =>
                     <div key={device.id} className="cartItem">
                         {/*<DeviceImage id={device.id} title={device.title} filename={device.filename}/>*/}
                         <img src={require(`../../assets/devices/${device.filename}`)} alt={device.filename} />

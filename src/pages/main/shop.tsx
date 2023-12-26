@@ -33,7 +33,7 @@ export function Shop() {
         const promise = axios({
             method: 'get',
             url: 'http://localhost:8080/devices',
-            // headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}
+            headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}
         })
         promise.then((res) => {
             setDevices(res.data)

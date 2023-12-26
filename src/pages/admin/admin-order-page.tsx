@@ -20,7 +20,7 @@ interface User {
     username: string;
 }
 
-interface Order {
+interface OrderSummary {
     id: number;
     orderItems: OrderItem[];
     user: User;
@@ -28,7 +28,7 @@ interface Order {
 }
 
 export function AdminOrderPage() {
-    const [order, setOrder] = useState<Order | null>(null);
+    const [order, setOrder] = useState<OrderSummary | null>(null);
     const { orderId } = useParams();
     const redirect = useNavigate();
 

@@ -39,7 +39,7 @@ export function OrderPage() {
             headers: {"Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}`},
         })
         res.then((res) =>{
-            setOrder({...res.data})
+            setOrder(res.data)
         }).catch((e) => redirect('/auth'))
     }, [username, orderId])
 
