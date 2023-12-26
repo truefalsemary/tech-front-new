@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import './order-page.css';
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../redux/store";
 
 interface Device {
     id: number;

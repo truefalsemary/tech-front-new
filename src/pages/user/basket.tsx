@@ -4,7 +4,13 @@ import axios, {AxiosError} from "axios";
 import "./basket.css";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../redux/store";
-import {addItemToBasket, deleteItemFromBasket, setItems, increaseItemQuantity} from "../../redux/basketSlice";
+import {
+    addItemToBasket,
+    deleteItemFromBasket,
+    increaseItemQuantity,
+    decreaseItemQuantity, setInitialState
+} from "../../redux/basketSlice";
+
 export interface Device {
     id: number;
     title: string;
@@ -23,7 +29,10 @@ export interface BasketItem {
     title: string;
 }
 
-
+export interface ItemQuantityDto {
+    deviceId: number;
+    quantity: number;
+}
 
 
 export function Basket() {
@@ -34,45 +43,46 @@ export function Basket() {
     // const [devices, setDevices] = useState<Device[]>([]);
     // const [basketItems, setBasketItems] = useState<BasketItem[]>([]);
     const redirect = useNavigate();
-    React.useEffect(() => {
-
-        const promise = axios({
-            method: 'get',
-            url: `http://localhost:8080/users/${username}/devices`,
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem('token')}`,
-            },
-        });
-        promise
-            .then((res) => {
-                const items: Device[]  = res.data;
-                dispatch(setItems(items.map((device: Device) => ({
-                    id: device.id,
-                    title: device.title,
-                    price: device.price,
-                    filename: device.filename,
-                    quantity: 1
-                }))))
-                //     ({
-                //     deviceId: device.id,
-                //     title: device.title,
-                //     price: device.price,
-                //     filename: device.filename,
-                //     quantity: 1
-                // }));
-                // setBasketItems(items);
-                // setDevices(res.data);
-
-
-            })
-            .catch((e: any) => {
-                redirect('/404')
-                // (window.location.href = '/auth');
-            });
-    }, [username]);
+    // React.useEffect(() => {
+    //
+    //     const promise = axios({
+    //         method: 'get',
+    //         url: `http://localhost:8080/users/${username}/devices`,
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             Authorization: `Bearer ${localStorage.getItem('token')}`,
+    //         },
+    //     });
+    //     promise
+    //         .then((res) => {
+    //             const items: Device[]  = res.data;
+    //             dispatch(setItems(items.map((device: Device) => ({
+    //                 id: device.id,
+    //                 title: device.title,
+    //                 price: device.price,
+    //                 filename: device.filename,
+    //                 quantity: 1
+    //             }))))
+    //             //     ({
+    //             //     deviceId: device.id,
+    //             //     title: device.title,
+    //             //     price: device.price,
+    //             //     filename: device.filename,
+    //             //     quantity: 1
+    //             // }));
+    //             // setBasketItems(items);
+    //             // setDevices(res.data);
+    //
+    //
+    //         })
+    //         .catch((e: any) => {
+    //             redirect('/404')
+    //             // (window.location.href = '/auth');
+    //         });
+    // }, [username]);
 
     const checkout = () => {
+
         axios({
             method: 'post',
             url: `http://localhost:8080/users/${username}/orders`,
@@ -80,11 +90,11 @@ export function Basket() {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
-            data: basket
+            data: basket.map((basketItem) => ({deviceId: basketItem.id, quantity: basketItem.quantity}))
         })
             .then(() => {
                 // setBasketItems([]);
-                dispatch(setItems([]));
+                dispatch(setInitialState());
                 // setDevices([]);
                 redirect(`/users/${username}/orders`);
             })
@@ -101,7 +111,7 @@ export function Basket() {
         axios({
             method: 'post',
             url: `http://localhost:8080/users/${username}/devices/${deviceId}`,
-            headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${localStorage.getItem('token')}` },
+            headers: {"Content-Type": "multipart/form-data", Authorization: `Bearer ${localStorage.getItem('token')}`},
         }).then(() =>
             redirect(`/users/${username}/basket`)
         ).catch((reason: AxiosError) => {
@@ -109,21 +119,22 @@ export function Basket() {
                 redirect('/auth')
             } else if (reason.response!.status === 403) {
                 redirect('/shop')
-            }})
+            }
+        })
     }
 
-    const updateItemQuantity = (deviceId: number, quantity: number) => {
-        // const updatedQuantity = Math.max(quantity, 1); // Ensure quantity is not less than 1
-        // const updatedItemQuantity = basketItems.map(item => {
-        //     if (item.id === deviceId) {
-        //
-        //         return { ...item, quantity: updatedQuantity };
-        //     }
-        //     return item;
-        // });
-        // setBasketItems(updatedItemQuantity);
-        dispatch(increaseItemQuantity(deviceId));
-    };
+    // const updateItemQuantity = (deviceId: number, quantity: number) => {
+    //     // const updatedQuantity = Math.max(quantity, 1); // Ensure quantity is not less than 1
+    //     // const updatedItemQuantity = basketItems.map(item => {
+    //     //     if (item.id === deviceId) {
+    //     //
+    //     //         return { ...item, quantity: updatedQuantity };
+    //     //     }
+    //     //     return item;
+    //     // });
+    //     // setBasketItems(updatedItemQuantity);
+    //     dispatch(increaseItemQuantity(deviceId));
+    // };
 
     return (
         <div className="cart">
@@ -145,40 +156,37 @@ export function Basket() {
                     :
 
                     basket.map((device: BasketItem) =>
-                    <div key={device.id} className="cartItem">
-                        {/*<DeviceImage id={device.id} title={device.title} filename={device.filename}/>*/}
-                        <img src={require(`../../assets/devices/${device.filename}`)} alt={device.filename} />
+                        <div key={device.id} className="cartItem">
+                            {/*<DeviceImage id={device.id} title={device.title} filename={device.filename}/>*/}
+                            <img src={require(`../../assets/devices/${device.filename}`)} alt={device.filename}/>
 
-                        <div className="description">
-                            <p>
-                                <b>{device.title}</b>
-                            </p>
-                            <p>{device.price}₽</p>
-                            <div className="countHandler">
-                                <button onClick={() => updateItemQuantity(device.id, (basket.find(item => item.id === device.id)?.quantity || 0) - 1)}> - </button>
+                            <div className="description">
+                                <p>
+                                    <b>{device.title}</b>
+                                </p>
+                                <p>{device.price}₽</p>
+                                <div className="countHandler">
+                                    <button onClick={() => dispatch(decreaseItemQuantity({id: device.id}))}> -</button>
 
-                                <b>{basket.find(item => item.id === device.id)?.quantity || 0}</b>
-                                <button onClick={() => updateItemQuantity(device.id, (basket.find(item => item.id === device.id)?.quantity || 0) + 1)}> + </button>
+                                    <b>{basket.find(item => item.id === device.id)?.quantity || 0}</b>
+                                    <button onClick={() => dispatch(increaseItemQuantity({id: device.id}))}> +</button>
+                                </div>
+                                <div>
+                                    {username !== undefined && <button className={"special-buttons"}
+                                                                       onClick={() => dispatch(deleteItemFromBasket(device.id))}>
+                                        Удалить
+                                    </button>}
+                                </div>
+
                             </div>
-                            <div>
-                            {username!==undefined && <button className={"special-buttons"} onClick={() => deleteDeviceFromUser(device.id)}>
-                                Удалить
-                            </button>}
-                            </div>
+
 
                         </div>
-
-
-
-
-
-                    </div>
-
-                )}
-                </div>
+                    )}
+            </div>
             <div className="buttons">
 
-                <button className={"special-buttons"} onClick={() => redirect('/shop')}>Continue Shopping</button>
+                <button className={"special-buttons"} onClick={() => redirect('/shop')}>Продолжить покупки</button>
                 <button className={"special-buttons"} onClick={() => checkout()} disabled={basket.length === 0}>
                     Заказать
                 </button>

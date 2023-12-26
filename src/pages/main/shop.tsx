@@ -3,6 +3,9 @@ import {Link, useNavigate} from "react-router-dom";
 import axios, {AxiosError} from "axios";
 import "./shop.css";
 import jwtDecode from "jwt-decode";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../redux/store";
+import {addDeviceToBasket, deleteItemFromBasket} from "../../redux/basketSlice";
 
 export interface Device {
     id: number;
@@ -20,6 +23,10 @@ export function Shop() {
     const [initialDevices, setInitialDevices] = React.useState<Array<Device>>([])
     const [search, setSearch] = React.useState('')
     const [imageSource, setImageSource] = useState<string | null>(null);
+
+
+    const dispatch = useDispatch();
+    const basket = useSelector((state: RootState) => state.basket);
 
     const token: string | null = localStorage.getItem('token');
     let decodedUsername: string = "";
@@ -42,24 +49,24 @@ export function Shop() {
     }, [])
 
 
-    const addToCart = (username: String, device: Device) => {
-        const res = axios({
-            method: 'post',
-            url: `http://localhost:8080/users/${username}/devices`,
-            data: device,
-            headers: {"Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}`},
-        })
-        res.then((res) => {
-            redirect(`/users/${username}/basket`)
-        }).catch((reason: AxiosError) => {
-
-            if (reason.response!.status === 401 || token === null) {
-                redirect('/auth')
-            } else if (reason.response!.status === 403) {
-                redirect('/shop')
-            }
-        })
-    }
+    // const addToCart = (username: String, device: Device) => {
+    //     const res = axios({
+    //         method: 'post',
+    //         url: `http://localhost:8080/users/${username}/devices`,
+    //         data: device,
+    //         headers: {"Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem('token')}`},
+    //     })
+    //     res.then((res) => {
+    //         redirect(`/users/${username}/basket`)
+    //     }).catch((reason: AxiosError) => {
+    //
+    //         if (reason.response!.status === 401 || token === null) {
+    //             redirect('/auth')
+    //         } else if (reason.response!.status === 403) {
+    //             redirect('/shop')
+    //         }
+    //     })
+    // }
 
     const searchDevices = () => {
         setDevices([...initialDevices.filter((a: Device) => {
@@ -68,26 +75,27 @@ export function Shop() {
                 || a.brand.toLowerCase()?.includes(search)
         })])
     }
+    const isDeviceInCart = (deviceId: number) => basket.some(item => item.id === deviceId);
 
-    const deleteDevice = (deviceId: number) => {
-        setDevices(devices.filter(i => i.id !== deviceId));
-        setInitialDevices(initialDevices.filter(i => i.id !== deviceId));
-        axios({
-            method: 'get',
-            url: `http://localhost:8080/admins/devices/delete/${deviceId}`,
-            headers: {"Content-Type": "multipart/form-data", Authorization: `Bearer ${localStorage.getItem('token')}`},
-        }).then(() => {
-                window.location.reload();
-                redirect("/shop");
-            }
-        ).catch((reason: AxiosError) => {
-            if (reason.response!.status === 401) {
-                redirect('/auth')
-            } else if (reason.response!.status === 403) {
-                redirect('/shop')
-            }
-        })
-    }
+    // const deleteDevice = (deviceId: number) => {
+    //     setDevices(devices.filter(i => i.id !== deviceId));
+    //     setInitialDevices(initialDevices.filter(i => i.id !== deviceId));
+    //     axios({
+    //         method: 'get',
+    //         url: `http://localhost:8080/admins/devices/delete/${deviceId}`,
+    //         headers: {"Content-Type": "multipart/form-data", Authorization: `Bearer ${localStorage.getItem('token')}`},
+    //     }).then(() => {
+    //             window.location.reload();
+    //             redirect("/shop");
+    //         }
+    //     ).catch((reason: AxiosError) => {
+    //         if (reason.response!.status === 401) {
+    //             redirect('/auth')
+    //         } else if (reason.response!.status === 403) {
+    //             redirect('/shop')
+    //         }
+    //     })
+    // }
 
 
     return (
@@ -121,7 +129,14 @@ export function Shop() {
                         </div>
                         {
                             ((localStorage.getItem('decoded')?.includes('USER'))) &&
-                            <button className="addToCartBttn" onClick={() => addToCart(decodedUsername, device)}>
+                            isDeviceInCart(device.id) ?
+                                <button className="addToCartBttn" onClick={() => dispatch(deleteItemFromBasket(device.id))}>
+                                    {/*addToCart(decodedUsername, device)}>*/}
+                                    Удалить из корзины
+                                </button>
+                                :
+                            <button className="addToCartBttn" onClick={() => dispatch(addDeviceToBasket(device))}>
+                                {/*addToCart(decodedUsername, device)}>*/}
                                 В корзину
                             </button>
                         }
@@ -133,7 +148,8 @@ export function Shop() {
                                         onClick={() => redirect(`/update-device/${device.id}`)}>Изменить
                                 </button>
 
-                                <button className="addToCartBttn" onClick={() => deleteDevice(device.id)}>
+                                <button className="addToCartBttn" onClick={() => dispatch(deleteItemFromBasket(device.id))}>
+                                    {/*// deleteDevice(device.id)}>*/}
                                     Удалить
                                 </button>
                             </div>
