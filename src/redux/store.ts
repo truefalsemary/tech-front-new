@@ -1,7 +1,11 @@
 import {configureStore, UnknownAction} from "@reduxjs/toolkit";
 
+import basketReducer from './basketSlice';
+
 export const store = configureStore({
-    reducer: {}
+    reducer: {
+        basket: basketReducer
+    }
 })
 
 export type RootState = ReturnType<typeof store.getState>;

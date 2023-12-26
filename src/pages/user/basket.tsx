@@ -2,6 +2,9 @@ import React, {useState} from 'react';
 import {redirect, useNavigate, useParams} from "react-router-dom";
 import axios, {AxiosError} from "axios";
 import "./basket.css";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../redux/store";
+import {addItemToBasket, deleteItemFromBasket, setItems, increaseItemQuantity} from "../../redux/basketSlice";
 export interface Device {
     id: number;
     title: string;
@@ -12,17 +15,27 @@ export interface Device {
     filename: string;
 }
 
-export interface ItemQuantity {
-    deviceId: number;
+export interface BasketItem {
+    id: number;
+    price: number;
     quantity: number;
+    filename: string;
+    title: string;
 }
 
+
+
+
 export function Basket() {
-    const {username} = useParams()
-    const [devices, setDevices] = useState<Device[]>([]);
-    const [itemQuantities, setItemQuantities] = useState<ItemQuantity[]>([]);
+    const {username} = useParams();
+
+    const basket = useSelector((state: RootState) => state.basket);
+    const dispatch = useDispatch();
+    // const [devices, setDevices] = useState<Device[]>([]);
+    // const [basketItems, setBasketItems] = useState<BasketItem[]>([]);
     const redirect = useNavigate();
     React.useEffect(() => {
+
         const promise = axios({
             method: 'get',
             url: `http://localhost:8080/users/${username}/devices`,
@@ -33,12 +46,24 @@ export function Basket() {
         });
         promise
             .then((res) => {
-                const items: ItemQuantity[]  = res.data.map((device: Device) => ({
-                    deviceId: device.id,
+                const items: Device[]  = res.data;
+                dispatch(setItems(items.map((device: Device) => ({
+                    id: device.id,
+                    title: device.title,
+                    price: device.price,
+                    filename: device.filename,
                     quantity: 1
-                }));
-                setItemQuantities(items);
-                setDevices(res.data);
+                }))))
+                //     ({
+                //     deviceId: device.id,
+                //     title: device.title,
+                //     price: device.price,
+                //     filename: device.filename,
+                //     quantity: 1
+                // }));
+                // setBasketItems(items);
+                // setDevices(res.data);
+
 
             })
             .catch((e: any) => {
@@ -55,11 +80,12 @@ export function Basket() {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
-            data: itemQuantities
+            data: basket
         })
             .then(() => {
-                setItemQuantities([]);
-                setDevices([]);
+                // setBasketItems([]);
+                dispatch(setItems([]));
+                // setDevices([]);
                 redirect(`/users/${username}/orders`);
             })
             .catch(() => {
@@ -69,8 +95,9 @@ export function Basket() {
 
 
     const deleteDeviceFromUser = (deviceId: number) => {
-        setDevices(devices.filter(i => i.id !== deviceId));
-        setItemQuantities(itemQuantities.filter(i => i.deviceId !== deviceId));
+        // setDevices(devices.filter(i => i.id !== deviceId));
+        // setBasketItems(basketItems.filter(i => i.id !== deviceId));
+        dispatch(deleteItemFromBasket(deviceId));
         axios({
             method: 'post',
             url: `http://localhost:8080/users/${username}/devices/${deviceId}`,
@@ -86,17 +113,17 @@ export function Basket() {
     }
 
     const updateItemQuantity = (deviceId: number, quantity: number) => {
-        const updatedQuantity = Math.max(quantity, 1); // Ensure quantity is not less than 1
-        const updatedItemQuantity = itemQuantities.map(item => {
-            if (item.deviceId === deviceId) {
-
-                return { ...item, quantity: updatedQuantity };
-            }
-            return item;
-        });
-        setItemQuantities(updatedItemQuantity);
+        // const updatedQuantity = Math.max(quantity, 1); // Ensure quantity is not less than 1
+        // const updatedItemQuantity = basketItems.map(item => {
+        //     if (item.id === deviceId) {
+        //
+        //         return { ...item, quantity: updatedQuantity };
+        //     }
+        //     return item;
+        // });
+        // setBasketItems(updatedItemQuantity);
+        dispatch(increaseItemQuantity(deviceId));
     };
-
 
     return (
         <div className="cart">
@@ -104,20 +131,20 @@ export function Basket() {
                 <h1>Моя корзина:</h1>
             </div>
             <div className="cart">
-                {/*{itemQuantities.map((item: ItemQuantity) =>*/}
+                {/*{basketItems.map((item: ItemQuantity) =>*/}
                 {/*    <div key={item.deviceId}>*/}
                 {/*        <b>{item.deviceId}</b>: {item.quantity}*/}
                 {/*        <br/>*/}
                 {/*    </div>*/}
                 {/*)}*/}
 
-                {devices.length == 0 ?
+                {basket.length == 0 ?
                     <div>
                         Корзина пуста
                     </div>
                     :
 
-                    devices.map((device: Device) =>
+                    basket.map((device: BasketItem) =>
                     <div key={device.id} className="cartItem">
                         {/*<DeviceImage id={device.id} title={device.title} filename={device.filename}/>*/}
                         <img src={require(`../../assets/devices/${device.filename}`)} alt={device.filename} />
@@ -128,10 +155,10 @@ export function Basket() {
                             </p>
                             <p>{device.price}₽</p>
                             <div className="countHandler">
-                                <button onClick={() => updateItemQuantity(device.id, (itemQuantities.find(item => item.deviceId === device.id)?.quantity || 0) - 1)}> - </button>
+                                <button onClick={() => updateItemQuantity(device.id, (basket.find(item => item.id === device.id)?.quantity || 0) - 1)}> - </button>
 
-                                <b>{itemQuantities.find(item => item.deviceId === device.id)?.quantity || 0}</b>
-                                <button onClick={() => updateItemQuantity(device.id, (itemQuantities.find(item => item.deviceId === device.id)?.quantity || 0) + 1)}> + </button>
+                                <b>{basket.find(item => item.id === device.id)?.quantity || 0}</b>
+                                <button onClick={() => updateItemQuantity(device.id, (basket.find(item => item.id === device.id)?.quantity || 0) + 1)}> + </button>
                             </div>
                             <div>
                             {username!==undefined && <button className={"special-buttons"} onClick={() => deleteDeviceFromUser(device.id)}>
@@ -152,7 +179,7 @@ export function Basket() {
             <div className="buttons">
 
                 <button className={"special-buttons"} onClick={() => redirect('/shop')}>Continue Shopping</button>
-                <button className={"special-buttons"} onClick={() => checkout()} disabled={devices.length === 0}>
+                <button className={"special-buttons"} onClick={() => checkout()} disabled={basket.length === 0}>
                     Заказать
                 </button>
             </div>
